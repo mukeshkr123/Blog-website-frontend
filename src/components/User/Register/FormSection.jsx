@@ -1,6 +1,17 @@
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const FormSection = (props) => {
+  //select the state from the store
+  const storeData = useSelector((store) => store?.users);
+  const { loading, appErr, serverErr, registerd } = storeData;
+
+  //redirect to login when registered successfully
+  if (registerd) {
+    return <Navigate to="/profile" />;
+  }
+
   const { handleSubmit, register, errors, reset, onSubmit } = props;
   return (
     <div className="w-full lg:w-1/2 px-4">
@@ -14,6 +25,12 @@ const FormSection = (props) => {
           <h3 className="mb-10 text-2xl text-gray-800 font-bold">
             Register Account
           </h3>
+          {appErr || serverErr ? (
+            <div className="text-red-400">
+              {appErr}
+              {serverErr}
+            </div>
+          ) : null}
           <div className="mb-6">
             <input
               {...register("firstName")}
@@ -62,17 +79,44 @@ const FormSection = (props) => {
               {errors.password && <p> {errors.password.message}</p>}
             </div>
           </div>
-          <button
-            className="w-full px-6 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-semibold transition duration-200"
-            type="submit"
-          >
-            Register
-          </button>
+          {loading ? (
+            <button
+              className="py-4 w-full bg-gray-500  text-white font-bold rounded-full transition duration-200"
+              type="submit"
+            >
+              Loading please wait...
+            </button>
+          ) : (
+            <button
+              className="w-full px-6 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-semibold transition duration-200"
+              type="submit"
+            >
+              Register
+            </button>
+          )}
         </form>
       </div>
     </div>
   );
 };
+
+/*
+   {loading ? (
+                    <button
+                      disabled
+                      className="py-4 w-full bg-gray-500  text-white font-bold rounded-full transition duration-200"
+                    >
+                      Loading please wait......
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="py-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200"
+                    >
+                      Register
+                    </button>
+                  )}
+*/
 
 FormSection.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
