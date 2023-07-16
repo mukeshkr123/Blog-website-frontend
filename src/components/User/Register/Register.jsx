@@ -3,6 +3,8 @@ import HeadingSection from "./HeadingSection";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch } from "react-redux";
+import { registerUserAction } from "../../../redux/slices/user/userSlices";
 
 const RegisterSchema = z.object({
   firstName: z.string().min(3, "First Name is required").max(50),
@@ -12,6 +14,7 @@ const RegisterSchema = z.object({
 });
 
 const Register = () => {
+  const dispatch = new useDispatch();
   const {
     handleSubmit,
     register,
@@ -23,6 +26,7 @@ const Register = () => {
 
   // submit the form
   const onSubmit = (data) => {
+    dispatch(registerUserAction(data));
     console.log(data);
   };
 
