@@ -1,10 +1,6 @@
 import FormSection from "./FormSection";
 
 const Login = () => {
-  const onSubmit = (data) => {
-    console.log(data);
-  };
-
   return (
     <>
       <section className="min-h-screen relative py-20 2xl:py-40 bg-gray-900 overflow-hidden">
@@ -21,7 +17,7 @@ const Login = () => {
               <div className="w-full lg:w-2/5 px-4">
                 <div className="px-6 lg:px-12 py-12 lg:py-24 bg-white shadow-lg rounded-lg">
                   {/* Form  */}
-                  <FormSection OnSubmit={onSubmit} />
+                  <FormSection />
                 </div>
               </div>
               <div className="w-full lg:w-3/5 px-4 mb-16 lg:mb-0 order-first lg:order-last">

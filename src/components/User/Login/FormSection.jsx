@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { PropTypes } from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { loginUserAction } from "../../../redux/slices/user/userSlices";
 
 const loginSchema = z.object({
   email: z
@@ -11,7 +13,9 @@ const loginSchema = z.object({
   password: z.string().min(7, "Password is required"),
 });
 
-const FormSection = ({ OnSubmit }) => {
+const FormSection = () => {
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -21,6 +25,20 @@ const FormSection = ({ OnSubmit }) => {
     resolver: zodResolver(loginSchema),
   });
 
+  //onSubmit
+  const OnSubmit = (data) => {
+    dispatch(loginUserAction(data));
+    console.log(data);
+  };
+
+  ///select the state from state
+  const storeData = useSelector((store) => store?.users);
+  const { loading, appErr, serverErr, userAuth } = storeData;
+
+  //redirect to login when registered successfully
+  if (userAuth) {
+    return <Navigate to="/profile" />;
+  }
   return (
     <form
       onSubmit={handleSubmit((data) => {
@@ -32,7 +50,16 @@ const FormSection = ({ OnSubmit }) => {
         {/* Header */}
         Login to your Account
       </h3>
-      <div className="text-red-500"></div>
+      {/* error  */}
+      <div className="text-red-500">
+        {appErr ||
+          (serverErr && (
+            <p>
+              {appErr}
+              {serverErr}
+            </p>
+          ))}
+      </div>
       <div className="flex items-center pl-6 mb-3 border border-gray-300 bg-white rounded-full">
         <span className="inline-block pr-3 border-r border-gray-300">
           <svg
@@ -100,19 +127,23 @@ const FormSection = ({ OnSubmit }) => {
         {errors.password && <p>{errors?.password?.message} </p>}
       </div>
       {/* Login button */}
-
-      <button
-        type="submit"
-        className="py-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200"
-      >
-        Login
-      </button>
+      {loading ? (
+        <button
+          type="submit"
+          className="py-4 w-full bg-gray-500 disabled  text-white font-bold rounded-full transition duration-200"
+        >
+          Login....
+        </button>
+      ) : (
+        <button
+          type="submit"
+          className="py-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200"
+        >
+          Login
+        </button>
+      )}
     </form>
   );
-};
-
-FormSection.propTypes = {
-  OnSubmit: PropTypes.func.isRequired,
 };
 
 export default FormSection;

@@ -1,20 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+const baseUrl = "http://localhost:5000";
 
-//confi
-const config = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
-
-// create register action
+//register action
 export const registerUserAction = createAsyncThunk(
   "users/register",
   async (user, { rejectWithValue }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    //http call
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/users/register",
+        `${baseUrl}/api/users/register`,
         user,
         config
       );
@@ -28,76 +28,76 @@ export const registerUserAction = createAsyncThunk(
   }
 );
 
-//Login Action
+//Login
 export const loginUserAction = createAsyncThunk(
   "user/login",
-  async (userData, { rejectWithValue, getState, dispatch }) => {
+  async (userData, { rejectWithValue }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
     try {
+      //make http call
       const { data } = await axios.post(
-        "http://localhost:5000/api/users/register",
+        `${baseUrl}/api/users/login`,
         userData,
         config
       );
-
-      // save user into the local storage
-      localStorage.setItem("userInfo", JSON.stringify(userData));
+      //save user into local storage
+      localStorage.setItem("userInfo", JSON.stringify(data));
       return data;
     } catch (error) {
-      if (!error?.message) {
+      if (!error?.response) {
         throw error;
       }
-      return rejectWithValue(error?.response?.message);
+      return rejectWithValue(error?.response?.data);
     }
   }
 );
 
-//user slices
-const userSlice = createSlice({
-  name: "user",
-  initialState: {
-    loading: false,
-    appErr: null,
-    serverErr: null,
-    registerd: false,
-  },
+//slices
+const usersSlices = createSlice({
+  name: "users",
+  initialState: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(registerUserAction.pending, (state) => {
-        state.loading = true;
-        state.appErr = null;
-        state.serverErr = null;
-      })
-      .addCase(registerUserAction.fulfilled, (state, action) => {
-        state.loading = false;
-        state.registerd = action.payload;
-        state.appErr = null;
-        state.serverErr = null;
-      })
-      .addCase(registerUserAction.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.serverErr = action?.error?.message;
-      });
+    //register
+    builder.addCase(registerUserAction.pending, (state, action) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(registerUserAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.registered = action?.payload;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(registerUserAction.rejected, (state, action) => {
+      console.log(action.payload);
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
 
-    //login reducer
-    builder
-      .addCase(loginUserAction.pending, (state, action) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(loginUserAction.fulfilled, (state, action) => {
-        state.userAuth = action?.payload;
-        state.loading = false;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(loginUserAction.rejected, (state, action) => {
-        state.appErr = action?.payload?.message;
-        state.serverErr = action?.error?.message;
-        state.loading = false;
-      });
+    //login
+    builder.addCase(loginUserAction.pending, (state, action) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(loginUserAction.fulfilled, (state, action) => {
+      state.userAuth = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(loginUserAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+      state.loading = false;
+    });
   },
 });
 
-export default userSlice.reducer;
+export default usersSlices.reducer;
