@@ -56,10 +56,17 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
+//get user from local storage and place into store
+const userLoginFromStorage = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
+
 //slices
 const usersSlices = createSlice({
   name: "users",
-  initialState: {},
+  initialState: {
+    userAuth: userLoginFromStorage,
+  },
   extraReducers: (builder) => {
     //register
     builder.addCase(registerUserAction.pending, (state, action) => {
