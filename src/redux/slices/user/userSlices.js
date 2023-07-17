@@ -56,6 +56,21 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
+//Log out Action
+export const logOutAction = createAsyncThunk(
+  "/user/logout",
+  async (payload, { rejectWithValue }) => {
+    try {
+      localStorage.removeItem("userInfo");
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //get user from local storage and place into store
 const userLoginFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -69,7 +84,7 @@ const usersSlices = createSlice({
   },
   extraReducers: (builder) => {
     //register
-    builder.addCase(registerUserAction.pending, (state, action) => {
+    builder.addCase(registerUserAction.pending, (state) => {
       state.loading = true;
       state.appErr = undefined;
       state.serverErr = undefined;
@@ -88,7 +103,7 @@ const usersSlices = createSlice({
     });
 
     //login
-    builder.addCase(loginUserAction.pending, (state, action) => {
+    builder.addCase(loginUserAction.pending, (state) => {
       state.loading = true;
       state.appErr = undefined;
       state.serverErr = undefined;
@@ -103,6 +118,22 @@ const usersSlices = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
       state.loading = false;
+    });
+
+    //logout
+    builder.addCase(logOutAction.pending, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(logOutAction.fulfilled, (state) => {
+      state.userAuth = undefined;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(logOutAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
     });
   },
 });
