@@ -1,6 +1,33 @@
-const FormSection = () => {
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { PropTypes } from "prop-types";
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .email("Please Enter a valid email")
+    .min(5, "Email is required"),
+  password: z.string().min(7, "Password is required"),
+});
+
+const FormSection = ({ OnSubmit }) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
   return (
-    <form>
+    <form
+      onSubmit={handleSubmit((data) => {
+        OnSubmit(data);
+        reset();
+      })}
+    >
       <h3 className="mb-10 text-3xl lg:text-4xl font-bold font-heading text-gray-800">
         {/* Header */}
         Login to your Account
@@ -28,6 +55,7 @@ const FormSection = () => {
         </span>
         {/* Email */}
         <input
+          {...register("email")}
           id="email"
           className="w-full pr-6 pl-4 py-4 font-bold placeholder-gray-400 rounded-r-full focus:outline-none bg-gray-100"
           type="email"
@@ -35,7 +63,9 @@ const FormSection = () => {
         />
       </div>
       {/* Error message */}
-      <div className="text-red-500 mb-2"></div>
+      <div className="text-red-500 mb-2">
+        {errors.email && <p>{errors?.email?.message} </p>}
+      </div>
       <div className="flex items-center pl-6 mb-6 border border-gray-300 bg-white rounded-full">
         <span className="inline-block pr-3 border-r border-gray-300">
           <svg
@@ -58,6 +88,7 @@ const FormSection = () => {
         </span>
         {/* Password */}
         <input
+          {...register("password")}
           id="password"
           className="w-full pr-6 pl-4 py-4 font-bold placeholder-gray-400 rounded-r-full focus:outline-none bg-gray-100"
           type="password"
@@ -65,7 +96,9 @@ const FormSection = () => {
         />
       </div>
       {/* Error message */}
-      <div className="text-red-500 mb-2"> </div>
+      <div className="text-red-500 mb-2">
+        {errors.password && <p>{errors?.password?.message} </p>}
+      </div>
       {/* Login button */}
 
       <button
@@ -76,6 +109,10 @@ const FormSection = () => {
       </button>
     </form>
   );
+};
+
+FormSection.propTypes = {
+  OnSubmit: PropTypes.func.isRequired,
 };
 
 export default FormSection;
