@@ -4,6 +4,7 @@ import Register from "./components/User/Register/Register";
 import Login from "./components/User/Login/Login";
 import Navbar from "./components/Navbar/Navbar";
 import AddNewCategory from "./components/Categories/AddNewCategory";
+import CatgoriesLists from "./components/Categories/CatgoriesLists";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/add-category" element={<AddNewCategory />} />
+        <Route path="/category-list" element={<CatgoriesLists />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
