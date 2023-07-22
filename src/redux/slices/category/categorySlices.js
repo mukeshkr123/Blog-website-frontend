@@ -40,7 +40,7 @@ export const fetchCategoriesAction = createAsyncThunk(
           Authorization: `Bearer ${userAuth?.token}`,
         },
       };
-      const { data } = await axios.post(`${baseUrl}/api/category`, config);
+      const { data } = await axios.get(`${baseUrl}/api/category`, config);
       return data;
     } catch (error) {
       if (!error.response) {
