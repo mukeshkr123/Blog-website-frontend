@@ -2,15 +2,16 @@ import { useEffect } from "react";
 import { FaPlusCircle, FaBookOpen } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
 
 import {
   deleteCategoryAction,
   fetchCategoryAction,
   updateCategoryAction,
 } from "../../redux/slices/category/categorySlices";
-import { useParams } from "react-router-dom";
 
 const UpdateCategory = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -21,7 +22,7 @@ const UpdateCategory = () => {
 
   // Get data from store
   const state = useSelector((state) => state?.category);
-  const { loading, appErr, serverErr, category } = state;
+  const { loading, appErr, serverErr, category, isEdited, isDeleted } = state;
 
   // react-hook-form
   const {
@@ -39,6 +40,11 @@ const UpdateCategory = () => {
     // Dispatch the action for updating the category
     dispatch(updateCategoryAction({ title: values.title, id }));
   };
+
+  //redirect to category list
+  if (isEdited || isDeleted) {
+    navigate("/category-list");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

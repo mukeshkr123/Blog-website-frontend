@@ -1,7 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const baseUrl = "http://localhost:5000";
+
+//Action to redirect
+const resetEditAction = createAction("category/reset");
+const resetDeletetAction = createAction("category/delete-reset");
 
 // create category action
 export const createCategoryAction = createAsyncThunk(
@@ -56,7 +60,7 @@ export const fetchCategoriesAction = createAsyncThunk(
 // update
 export const updateCategoryAction = createAsyncThunk(
   "category/update",
-  async (category, { rejectWithValue, getState }) => {
+  async (category, { rejectWithValue, getState, dispatch }) => {
     try {
       const userAuth = getState()?.users?.userAuth;
       const config = {
@@ -70,6 +74,9 @@ export const updateCategoryAction = createAsyncThunk(
         { title: category.title },
         config
       );
+
+      // dispatch the to reset the updated category
+      dispatch(resetEditAction());
       return data;
     } catch (error) {
       if (!error.response) {
@@ -83,7 +90,7 @@ export const updateCategoryAction = createAsyncThunk(
 // delete
 export const deleteCategoryAction = createAsyncThunk(
   "category/delete",
-  async (id, { rejectWithValue, getState }) => {
+  async (id, { rejectWithValue, getState, dispatch }) => {
     try {
       const userAuth = getState()?.users?.userAuth;
       const config = {
@@ -96,6 +103,10 @@ export const deleteCategoryAction = createAsyncThunk(
         `${baseUrl}/api/category/${id}`,
         config
       );
+
+      //dispatch the actions
+      dispatch(resetDeletetAction());
+
       return data;
     } catch (error) {
       if (!error.response) {
@@ -181,10 +192,18 @@ const categorySlice = createSlice({
         state.appErr = null;
         state.serverErr = null;
       })
+
+      .addCase(resetEditAction, (state) => {
+        // dispatch action
+        state.isEdited = true;
+      })
+
       .addCase(updateCategoryAction.fulfilled, (state, action) => {
         state.updatedCategory = action.payload;
         state.loading = false;
+        state.isEdited = false;
       })
+
       .addCase(updateCategoryAction.rejected, (state, action) => {
         state.loading = false;
         if (action.payload) {
@@ -198,9 +217,14 @@ const categorySlice = createSlice({
         state.appErr = null;
         state.serverErr = null;
       })
+      // dispatch actions for redirect
+      .addCase(resetDeletetAction, (state) => {
+        state.isDeleted = true;
+      })
       .addCase(deleteCategoryAction.fulfilled, (state, action) => {
         state.deletedCategory = action.payload;
         state.loading = false;
+        state.isDeleted = false;
       })
       .addCase(deleteCategoryAction.rejected, (state, action) => {
         state.loading = false;
