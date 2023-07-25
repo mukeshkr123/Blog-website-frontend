@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar/Navbar";
 import AddNewCategory from "./components/Categories/AddNewCategory";
 import CatgoriesLists from "./components/Categories/CatgoriesLists";
 import UpdateCategory from "./components/Categories/UpdateCategories ";
+import CreatePost from "./components/Posts/CreatePost";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/add-category" element={<AddNewCategory />} />
         <Route path="/update-category/:id" element={<UpdateCategory />} />
+        <Route path="/create-post" element={<CreatePost />} />
         <Route path="/category-list" element={<CatgoriesLists />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
