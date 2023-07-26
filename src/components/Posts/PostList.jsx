@@ -3,7 +3,21 @@ import { FiThumbsDown, FiEye } from "react-icons/fi";
 import { BsHandThumbsUp } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { fetchPostsAction } from "../../redux/slices/posts/postSlices";
 export default function PostsList() {
+  const dispatch = useDispatch();
+
+  useState(() => {
+    dispatch(fetchPostsAction());
+  }, [dispatch]);
+
+  // select post from store
+
+  const post = useSelector((state) => state?.post);
+  const { postLists, loading, appErr, serverErr } = post;
+
   return (
     <>
       <section>
@@ -51,87 +65,109 @@ export default function PostsList() {
                 </div>
               </div>
               <div className="w-full lg:w-3/4 px-3">
-                <div className="flex flex-wrap bg-gray-900 -mx-3  lg:mb-6">
-                  <div className="mb-10  w-full lg:w-1/4 px-3">
-                    <Link>
-                      {/* Post image */}
-                      <img
-                        className="w-full h-full object-cover rounded"
-                        src="https://cdn.pixabay.com/photo/2021/02/24/23/43/boy-6047786_960_720.jpg"
-                        alt=""
-                      />
-                    </Link>
-                    {/* Likes, views dislikes */}
-                    <div className="flex flex-row bg-gray-300 justify-center w-full  items-center ">
-                      {/* Likes */}
-                      <div className="flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1">
-                        {/* Togle like  */}
-                        <div className="">
-                          <BsHandThumbsUp className="h-7 w-7 text-indigo-600 cursor-pointer" />
-                        </div>
-                        <div className="pl-2 text-gray-600">(2)</div>
-                      </div>
-                      {/* Dislike */}
-                      <div className="flex flex-row  justify-center items-center ml-4 mr-4 pb-2 pt-1">
-                        <div>
-                          <FiThumbsDown className="h-7 w-7 cursor-pointer text-gray-600" />
-                        </div>
-                        <div className="pl-2 text-gray-600">(2)</div>
-                      </div>
-                      {/* Views */}
-                      <div className="flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1">
-                        <div>
-                          <FiEye className="h-7 w-7  text-gray-400" />
-                        </div>
-                        <div className="pl-2 text-gray-600">
-                          {/* {post?.numViews} */}2
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full lg:w-3/4 px-3">
-                    <Link className="hover:underline">
-                      <h3 className="mb-1 text-2xl text-green-400 font-bold font-heading">
-                        {/* {capitalizeWord(post?.title)} */} post title
-                      </h3>
-                    </Link>
-                    <p className="text-gray-300">post description</p>
-                    {/* Read more */}
-                    <Link className="text-indigo-500 hover:underline">
-                      Read More..
-                    </Link>
-                    {/* User Avatar */}
-                    <div className="mt-6 flex items-center">
-                      <div className="flex-shrink-0">
+                {/* post  */}
+                {loading ? (
+                  <h1>Loading</h1>
+                ) : appErr || serverErr ? (
+                  <h1>
+                    {appErr} {serverErr}
+                  </h1>
+                ) : postLists?.length <= 0 ? (
+                  <h1> No Post Found</h1>
+                ) : (
+                  postLists.map((post) => (
+                    <div
+                      key={post.id}
+                      className="flex flex-wrap bg-gray-900 -mx-3  lg:mb-6"
+                    >
+                      <div className="mb-10  w-full lg:w-1/4 px-3">
                         <Link>
+                          {/* Post image */}
                           <img
-                            className="h-10 w-10 rounded-full"
-                            src="https://cdn.pixabay.com/photo/2021/02/24/23/43/boy-6047786_960_720.jpg"
+                            className="w-full h-full object-cover rounded"
+                            src={post?.image}
                             alt=""
                           />
                         </Link>
-                      </div>
-                      <div className="ml-3">
-                        <p className="text-sm font-medium text-gray-900">
-                          <Link className="text-yellow-400 hover:underline ">
-                            user full name
-                          </Link>
-                        </p>
-                        <div className="flex space-x-1 text-sm text-green-500">
-                          <time>
-                            {/* <DateFormatter date={post?.createdAt} /> */}
-                            Post date
-                          </time>
-                          <span aria-hidden="true">&middot;</span>
+                        {/* Likes, views dislikes */}
+                        <div className="flex flex-row bg-gray-300 justify-center w-full  items-center ">
+                          {/* Likes */}
+                          <div className="flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1">
+                            {/* Togle like  */}
+                            <div className="">
+                              <BsHandThumbsUp className="h-7 w-7 text-indigo-600 cursor-pointer" />
+                            </div>
+                            <div className="pl-2 text-gray-600">
+                              {post?.likes?.length}
+                            </div>
+                          </div>
+                          {/* Dislike */}
+                          <div className="flex flex-row  justify-center items-center ml-4 mr-4 pb-2 pt-1">
+                            <div>
+                              <FiThumbsDown className="h-7 w-7 cursor-pointer text-gray-600" />
+                            </div>
+                            <div className="pl-2 text-gray-600">
+                              {post?.dislikes?.length}
+                            </div>
+                          </div>
+                          {/* Views */}
+                          <div className="flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1">
+                            <div>
+                              <FiEye className="h-7 w-7  text-gray-400" />
+                            </div>
+                            <div className="pl-2 text-gray-600">
+                              {/* {post?.numViews} */}
+                              {post?.numViews}
+                            </div>
+                          </div>
                         </div>
                       </div>
+                      <div className="w-full lg:w-3/4 px-3">
+                        <Link className="hover:underline">
+                          <h3 className="mb-1 text-2xl text-green-400 font-bold font-heading">
+                            {/* {capitalizeWord(post?.title)} */}
+                            {post.title}
+                          </h3>
+                        </Link>
+                        <p className="text-gray-300">{post?.description}</p>
+                        {/* Read more */}
+                        <Link className="text-indigo-500 hover:underline">
+                          Read More..
+                        </Link>
+                        {/* User Avatar */}
+                        <div className="mt-6 flex items-center">
+                          <div className="flex-shrink-0">
+                            <Link>
+                              <img
+                                className="h-10 w-10 rounded-full"
+                                src={post?.user?.profilePhoto}
+                                alt=""
+                              />
+                            </Link>
+                          </div>
+                          <div className="ml-3">
+                            <p className="text-sm font-medium text-gray-900">
+                              <Link className="text-yellow-400 hover:underline ">
+                                {post?.user?.firstName} {post?.user?.lastName}
+                              </Link>
+                            </p>
+                            <div className="flex space-x-1 text-sm text-green-500">
+                              <time>
+                                {/* <DateFormatter date={post?.createdAt} /> */}
+                                Post date
+                              </time>
+                              <span aria-hidden="true">&middot;</span>
+                            </div>
+                          </div>
+                        </div>
+                        {/* <p className="text-gray-500">
+                            Quisque id sagittis turpis. Nulla sollicitudin rutrum
+                            eros eu dictum...
+                          </p> */}
+                      </div>
                     </div>
-                    {/* <p className="text-gray-500">
-                          Quisque id sagittis turpis. Nulla sollicitudin rutrum
-                          eros eu dictum...
-                        </p> */}
-                  </div>
-                </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

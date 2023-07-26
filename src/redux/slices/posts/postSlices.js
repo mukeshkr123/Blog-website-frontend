@@ -39,6 +39,20 @@ export const createpostAction = createAsyncThunk(
   }
 );
 
+// fetch all post
+export const fetchPostsAction = createAsyncThunk(
+  "post/list",
+  async (post, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${baseUrl}/api/posts`);
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //slice
 
 const postSlice = createSlice({
@@ -59,6 +73,21 @@ const postSlice = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(createpostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+    // create post
+    builder.addCase(fetchPostsAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchPostsAction.fulfilled, (state, action) => {
+      state.postLists = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(fetchPostsAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
