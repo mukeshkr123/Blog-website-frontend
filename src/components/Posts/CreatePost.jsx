@@ -1,4 +1,3 @@
-import React from "react";
 // import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,8 +12,8 @@ import { createpostAction } from "../../redux/slices/posts/postSlices";
 const formSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required"),
-  category: Yup.object().required("Category is required"),
-  image: Yup.string().required("Image is required"),
+  category: Yup.string().required("Category is required"),
+  image: Yup.object().required("Image is required"),
 });
 const Container = styled.div`
   flex: 1;
@@ -47,12 +46,15 @@ export default function CreatePost() {
   });
 
   const onSubmit = (data) => {
+    console.log(data);
     const postData = {
       category: data?.category?.label,
       title: data?.title,
       description: data?.description,
-      image: data?.image,
+      image: data?.image[0],
     };
+
+    console.log(postData);
     dispatch(createpostAction(postData));
   };
 

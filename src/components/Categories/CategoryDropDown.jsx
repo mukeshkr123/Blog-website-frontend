@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
 import { fetchCategoriesAction } from "../../redux/slices/category/categorySlices";
+import PropTypes from "prop-types";
 
 const CategoryDropDown = (props) => {
   // Dispatch action
@@ -55,6 +56,17 @@ const CategoryDropDown = (props) => {
       )}
     </div>
   );
+};
+
+// Prop Types
+CategoryDropDown.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  value: PropTypes.shape({
+    label: PropTypes.string,
+    value: PropTypes.string,
+  }),
+  error: PropTypes.string,
 };
 
 export default CategoryDropDown;
