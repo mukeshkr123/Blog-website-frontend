@@ -113,6 +113,22 @@ const postSlice = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
+
+    //add likes
+    builder.addCase(addLikesToPost.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addLikesToPost.fulfilled, (state, action) => {
+      state.likes = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(addLikesToPost.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
   },
 });
 
