@@ -8,6 +8,7 @@ import CatgoriesLists from "./components/Categories/CatgoriesLists";
 import UpdateCategory from "./components/Categories/UpdateCategories ";
 import CreatePost from "./components/Posts/CreatePost";
 import PostsList from "./components/Posts/PostList";
+import PostDetails from "./components/Posts/PostDetails";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/posts" element={<PostsList />} />
+        <Route path="/posts/:id" element={<PostDetails />} />
       </Routes>
     </Router>
   );
