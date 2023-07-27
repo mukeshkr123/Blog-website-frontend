@@ -6,17 +6,33 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { fetchPostsAction } from "../../redux/slices/posts/postSlices";
+import { fetchCategoriesAction } from "../../redux/slices/category/categorySlices";
 export default function PostsList() {
   const dispatch = useDispatch();
 
+  //fetch posts
   useState(() => {
     dispatch(fetchPostsAction());
+  }, [dispatch]);
+
+  //fetch categories
+  useState(() => {
+    dispatch(fetchCategoriesAction());
   }, [dispatch]);
 
   // select post from store
 
   const post = useSelector((state) => state?.post);
   const { postLists, loading, appErr, serverErr } = post;
+
+  // select category from store
+  const category = useSelector((state) => state?.category);
+  const {
+    categoryList,
+    loading: categoryLoading,
+    appErr: categoryAppErr,
+    serverErr: categoryServerErr,
+  } = category;
 
   return (
     <>
@@ -46,21 +62,21 @@ export default function PostsList() {
                     Categories
                   </h4>
                   <ul>
-                    <div>Loading</div>
-
-                    <div className="text-red-400 text-base">
-                      Categories Error goes here
-                    </div>
-
-                    <div className="text-xl text-gray-100 text-center">
-                      No category
-                    </div>
-
-                    <li>
-                      <p className="block cursor-pointer py-2 px-3 mb-4 rounded text-yellow-500 font-bold bg-gray-500">
-                        {/* {category?.title} */} category List
-                      </p>
-                    </li>
+                    {categoryLoading ? (
+                      <h1>Loading ....</h1>
+                    ) : categoryAppErr || categoryServerErr ? (
+                      <h1>
+                        {categoryAppErr} {categoryAppErr}
+                      </h1>
+                    ) : (
+                      categoryList.map((category) => (
+                        <li key={category.id}>
+                          <p className="block cursor-pointer py-2 px-3 mb-4 rounded text-yellow-500 font-bold bg-gray-500">
+                            {category.title}
+                          </p>
+                        </li>
+                      ))
+                    )}
                   </ul>
                 </div>
               </div>
@@ -74,6 +90,8 @@ export default function PostsList() {
                   </h1>
                 ) : postLists?.length <= 0 ? (
                   <h1> No Post Found</h1>
+                ) : categoryList?.length <= 0 ? (
+                  <h1> No Category Found</h1>
                 ) : (
                   postLists.map((post) => (
                     <div
