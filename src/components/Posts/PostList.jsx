@@ -4,29 +4,19 @@ import { BsHandThumbsUp } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { fetchPostsAction } from "../../redux/slices/posts/postSlices";
+import { useEffect } from "react";
+import {
+  addDisLikesToPost,
+  addLikesToPost,
+  fetchPostsAction,
+} from "../../redux/slices/posts/postSlices";
 import { fetchCategoriesAction } from "../../redux/slices/category/categorySlices";
 export default function PostsList() {
   const dispatch = useDispatch();
 
-  //fetch posts
-  useState(() => {
-    dispatch(fetchPostsAction());
-  }, [dispatch]);
-
-  //fetch categories
-  useState(() => {
-    dispatch(fetchCategoriesAction());
-  }, [dispatch]);
-
-  // select post from store
-
   const post = useSelector((state) => state?.post);
-  const { postLists, loading, appErr, serverErr } = post;
-  console.log(postLists);
+  const { postLists, loading, appErr, serverErr, likes, dislikes } = post;
 
-  // select category from store
   const category = useSelector((state) => state?.category);
   const {
     categoryList,
@@ -35,6 +25,13 @@ export default function PostsList() {
     serverErr: categoryServerErr,
   } = category;
 
+  useEffect(() => {
+    dispatch(fetchPostsAction());
+  }, [dispatch, likes, dislikes]);
+
+  useEffect(() => {
+    dispatch(fetchCategoriesAction());
+  }, [dispatch]);
   return (
     <>
       <section>
@@ -71,7 +68,7 @@ export default function PostsList() {
                       </h1>
                     ) : (
                       categoryList.map((category) => (
-                        <li key={category.id}>
+                        <li key={category._id}>
                           <p className="block cursor-pointer py-2 px-3 mb-4 rounded text-yellow-500 font-bold bg-gray-500">
                             {category.title}
                           </p>
@@ -114,7 +111,12 @@ export default function PostsList() {
                           <div className="flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1">
                             {/* Togle like  */}
                             <div className="">
-                              <BsHandThumbsUp className="h-7 w-7 text-indigo-600 cursor-pointer" />
+                              <BsHandThumbsUp
+                                onClick={() =>
+                                  dispatch(addLikesToPost(post?.id))
+                                }
+                                className="h-7 w-7 text-indigo-600 cursor-pointer"
+                              />
                             </div>
                             <div className="pl-2 text-gray-600">
                               {post?.likes?.length}
@@ -123,7 +125,12 @@ export default function PostsList() {
                           {/* Dislike */}
                           <div className="flex flex-row  justify-center items-center ml-4 mr-4 pb-2 pt-1">
                             <div>
-                              <FiThumbsDown className="h-7 w-7 cursor-pointer text-gray-600" />
+                              <FiThumbsDown
+                                onClick={() =>
+                                  dispatch(addDisLikesToPost(post?._id))
+                                }
+                                className="h-7 w-7 cursor-pointer text-gray-600"
+                              />
                             </div>
                             <div className="pl-2 text-gray-600">
                               {post?.dislikes?.length}
