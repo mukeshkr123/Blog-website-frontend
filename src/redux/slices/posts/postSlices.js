@@ -7,7 +7,6 @@ const resetPost = createAction("category/reset");
 export const createpostAction = createAsyncThunk(
   "post/created",
   async (post, { rejectWithValue, getState, dispatch }) => {
-    console.log(post);
     //get user token
     const user = getState()?.users;
     const { userAuth } = user;
@@ -42,9 +41,31 @@ export const createpostAction = createAsyncThunk(
 // fetch all post
 export const fetchPostsAction = createAsyncThunk(
   "post/list",
-  async (post, { rejectWithValue }) => {
+  async (postId, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(`${baseUrl}/api/posts`);
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+// add likes to post
+export const addLikesToPost = createAsyncThunk(
+  "post/like",
+  async (PostId, { rejectWithValue, getState }) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(`${baseUrl}/api/likes`, PostId, config);
       return data;
     } catch (error) {
       if (!error?.response) throw error;
@@ -59,10 +80,10 @@ const postSlice = createSlice({
   name: "post",
   initialState: {},
   extraReducers: (builder) => {
-    builder.addCase(createpostAction.pending, (state, action) => {
+    builder.addCase(createpostAction.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(resetPost, (state, action) => {
+    builder.addCase(resetPost, (state) => {
       state.isCreated = true;
     });
     builder.addCase(createpostAction.fulfilled, (state, action) => {
@@ -78,7 +99,7 @@ const postSlice = createSlice({
       state.serverErr = action?.error?.message;
     });
     // create post
-    builder.addCase(fetchPostsAction.pending, (state, action) => {
+    builder.addCase(fetchPostsAction.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(fetchPostsAction.fulfilled, (state, action) => {
