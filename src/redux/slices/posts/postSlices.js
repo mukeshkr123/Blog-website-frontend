@@ -139,6 +139,31 @@ export const updatePostAction = createAsyncThunk(
     }
   }
 );
+//delete the  post
+export const deletePostPostAction = createAsyncThunk(
+  "post/delete",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    const userAuth = getState()?.users?.userAuth;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.delete(
+        `${baseUrl}/api/posts/${postId}`,
+        config
+      );
+
+      dispatch(resetPostEdit());
+      return data;
+    } catch (error) {
+      if (!error.response) throw error;
+
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const initialState = {
   loading: false,
@@ -244,6 +269,21 @@ const postSlice = createSlice({
         state.serverErr = undefined;
       })
       .addCase(updatePostAction.rejected, (state, action) => {
+        state.loading = false;
+        state.appErr = action.payload?.message;
+        state.serverErr = action.error?.message;
+      })
+      .addCase(deletePostPostAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deletePostPostAction.fulfilled, (state, action) => {
+        state.postUpdated = action.payload;
+        state.loading = false;
+        state.isCreated = false;
+        state.appErr = undefined;
+        state.serverErr = undefined;
+      })
+      .addCase(deletePostPostAction.rejected, (state, action) => {
         state.loading = false;
         state.appErr = action.payload?.message;
         state.serverErr = action.error?.message;
