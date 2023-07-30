@@ -1,19 +1,25 @@
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSinglePostsAction } from "../../redux/slices/posts/postSlices";
+import {
+  deletePostPostAction,
+  fetchSinglePostsAction,
+} from "../../redux/slices/posts/postSlices";
 
 const PostDetails = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchSinglePostsAction(id));
   }, [dispatch, id]);
 
   const state = useSelector((state) => state.post);
-  const { postDetails: post, loading, appErr, serverErr } = state;
+  const { postDetails: post, loading, appErr, serverErr, isDeleted } = state;
+
+  if (isDeleted) navigate("/posts");
 
   return (
     <>
@@ -65,7 +71,10 @@ const PostDetails = () => {
                     <BsPencilSquare className="h-8 mt-3 text-yellow-300" />
                   </Link>
                   <button className="ml-3">
-                    <BsTrash className="h-8 mt-3 text-red-600" />
+                    <BsTrash
+                      onClick={() => dispatch(deletePostPostAction(post?._id))}
+                      className="h-8 mt-3 text-red-600"
+                    />
                   </button>
                 </div>
               </div>

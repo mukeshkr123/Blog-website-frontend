@@ -6,6 +6,7 @@ const baseUrl = "http://localhost:5000";
 // Action to reset post state
 const resetPost = createAction("category/reset");
 const resetPostEdit = createAction("post/reset");
+const resetPostDelete = createAction("post/delete");
 
 export const createpostAction = createAsyncThunk(
   "post/created",
@@ -154,8 +155,8 @@ export const deletePostPostAction = createAsyncThunk(
         `${baseUrl}/api/posts/${postId}`,
         config
       );
-
-      dispatch(resetPostEdit());
+      // dispatch
+      dispatch(resetPostDelete());
       return data;
     } catch (error) {
       if (!error.response) throw error;
@@ -276,9 +277,13 @@ const postSlice = createSlice({
       .addCase(deletePostPostAction.pending, (state) => {
         state.loading = true;
       })
+      .addCase(resetPostDelete, (state, action) => {
+        state.isDeleted = true;
+      })
       .addCase(deletePostPostAction.fulfilled, (state, action) => {
-        state.postUpdated = action.payload;
+        state.postDeleted = action.payload;
         state.loading = false;
+        state.isDeleted = false;
         state.isCreated = false;
         state.appErr = undefined;
         state.serverErr = undefined;
