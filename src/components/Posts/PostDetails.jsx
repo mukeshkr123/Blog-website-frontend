@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSinglePostsAction } from "../../redux/slices/posts/postSlices";
-import { RiH1 } from "react-icons/ri";
 
 const PostDetails = () => {
   const dispatch = useDispatch();

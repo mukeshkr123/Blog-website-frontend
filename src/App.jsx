@@ -9,6 +9,7 @@ import UpdateCategory from "./components/Categories/UpdateCategories ";
 import CreatePost from "./components/Posts/CreatePost";
 import PostsList from "./components/Posts/PostList";
 import PostDetails from "./components/Posts/PostDetails";
+import UpdatePost from "./components/Posts/UpdatePost";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/posts" element={<PostsList />} />
         <Route path="/posts/:id" element={<PostDetails />} />
+        <Route path="/update-post/:id" element={<UpdatePost />} />
       </Routes>
     </Router>
   );
