@@ -50,7 +50,6 @@ export const fetchPostsAction = createAsyncThunk(
 export const fetchSinglePostsAction = createAsyncThunk(
   "post/detail",
   async (id, { rejectWithValue }) => {
-    console.log(id);
     try {
       const { data } = await axios.get(`${baseUrl}/api/posts/${id}`);
       return data;

@@ -21,6 +21,14 @@ const PostDetails = () => {
 
   if (isDeleted) navigate("/posts");
 
+  //get login user
+  const user = useSelector((state) => state.users);
+  const {
+    userAuth: { _id },
+  } = user;
+
+  const isCreatedBy = post?.user?.id === _id;
+
   return (
     <>
       {loading ? (
@@ -65,18 +73,22 @@ const PostDetails = () => {
                   {post?.description}
                 </p>
 
-                {/* Show delete and update btn if created user */}
-                <div className="flex">
-                  <Link to={`/update-post/${post?._id}`} className="p-3">
-                    <BsPencilSquare className="h-8 mt-3 text-yellow-300" />
-                  </Link>
-                  <button className="ml-3">
-                    <BsTrash
-                      onClick={() => dispatch(deletePostPostAction(post?._id))}
-                      className="h-8 mt-3 text-red-600"
-                    />
-                  </button>
-                </div>
+                {/* Show delete and update btn if by the user created user */}
+                {isCreatedBy ? (
+                  <div className="flex">
+                    <Link to={`/update-post/${post?._id}`} className="p-3">
+                      <BsPencilSquare className="h-8 mt-3 text-yellow-300" />
+                    </Link>
+                    <button className="ml-3">
+                      <BsTrash
+                        onClick={() =>
+                          dispatch(deletePostPostAction(post?._id))
+                        }
+                        className="h-8 mt-3 text-red-600"
+                      />
+                    </button>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
