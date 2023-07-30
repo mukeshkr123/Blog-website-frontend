@@ -5,6 +5,7 @@ const baseUrl = "http://localhost:5000";
 
 // Action to reset post state
 const resetPost = createAction("category/reset");
+const resetPostEdit = createAction("post/reset");
 
 export const createpostAction = createAsyncThunk(
   "post/created",
@@ -115,7 +116,7 @@ export const addDisLikesToPost = createAsyncThunk(
 //update the  post
 export const updatePostAction = createAsyncThunk(
   "post/updated",
-  async (post, { rejectWithValue, getState }) => {
+  async (post, { rejectWithValue, getState, dispatch }) => {
     const userAuth = getState()?.users?.userAuth;
     const config = {
       headers: {
@@ -128,11 +129,12 @@ export const updatePostAction = createAsyncThunk(
         post,
         config
       );
+
+      dispatch(resetPostEdit());
       return data;
     } catch (error) {
       if (!error.response) throw error;
 
-      // You can handle specific error statuses here and provide custom messages.
       return rejectWithValue(error.response.data);
     }
   }
@@ -151,9 +153,7 @@ const initialState = {
 const postSlice = createSlice({
   name: "post",
   initialState,
-  reducers: {
-    // You can add synchronous actions here if needed.
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(createpostAction.pending, (state) => {
@@ -232,6 +232,9 @@ const postSlice = createSlice({
       })
       .addCase(updatePostAction.pending, (state) => {
         state.loading = true;
+      })
+      .addCase(resetPostEdit, (state, action) => {
+        state.isUpdated = true;
       })
       .addCase(updatePostAction.fulfilled, (state, action) => {
         state.postUpdated = action.payload;

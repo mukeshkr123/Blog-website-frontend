@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchSinglePostsAction,
@@ -17,6 +17,7 @@ const PostSchema = z.object({
 export default function UpdatePost() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // fetch the post data
   useEffect(() => {
@@ -36,6 +37,10 @@ export default function UpdatePost() {
   // select the post data
   const postData = useSelector((state) => state.post);
   const { postDetails } = postData;
+
+  // select the upadeted post data
+  const postUpdate = useSelector((state) => state.post);
+  const { loading, appErr, serverErr, isUpdated } = postUpdate;
 
   const {
     handleSubmit,
@@ -58,13 +63,21 @@ export default function UpdatePost() {
     });
   }, [postDetails, reset]);
 
+  //redirect to
+  if (isUpdated) navigate("/posts");
+
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-300">
           Are you sure you want to edit{" "}
-          <span className="text-green-300">Title</span>
+          <span className="text-green-300">{postDetails?.title}</span>
         </h2>
+        {appErr || serverErr ? (
+          <h1 className="text-red-400 text-xl text-center">
+            {appErr} {serverErr}
+          </h1>
+        ) : null}
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -116,12 +129,21 @@ export default function UpdatePost() {
             /> */}
 
             <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Update
-              </button>
+              {loading ? (
+                <button
+                  type="submit"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm disabled font-medium text-white bg-gray-400"
+                >
+                  Please wait Updating....
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Update
+                </button>
+              )}
             </div>
           </form>
         </div>

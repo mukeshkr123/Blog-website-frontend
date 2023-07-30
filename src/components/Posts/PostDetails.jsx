@@ -61,7 +61,7 @@ const PostDetails = () => {
 
                 {/* Show delete and update btn if created user */}
                 <div className="flex">
-                  <Link to="/" className="p-3">
+                  <Link to={`/update-post/${post?._id}`} className="p-3">
                     <BsPencilSquare className="h-8 mt-3 text-yellow-300" />
                   </Link>
                   <button className="ml-3">
