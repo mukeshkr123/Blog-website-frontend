@@ -1,23 +1,62 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchSinglePostsAction,
+  updatePostAction,
+} from "../../redux/slices/posts/postSlices";
+import { useEffect } from "react";
 
-const schema = z.object({
+const PostSchema = z.object({
   title: z.string().nonempty("Title is required"),
   description: z.string().nonempty("Description is required"),
 });
 
 export default function UpdatePost() {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  // fetch the post data
+  useEffect(() => {
+    dispatch(fetchSinglePostsAction(id));
+  }, [id, dispatch]);
+
+  // dispatch
+  const onSubmit = (values) => {
+    const data = {
+      title: values.title,
+      description: values.description,
+      id,
+    };
+    dispatch(updatePostAction(data));
+  };
+
+  // select the post data
+  const postData = useSelector((state) => state.post);
+  const { postDetails } = postData;
+
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schema) });
+  } = useForm({
+    defaultValues: {
+      title: postDetails?.title,
+      description: postDetails?.description,
+    },
+    resolver: zodResolver(PostSchema),
+  });
 
-  const onSubmit = (data) => {
-    // Handle form submission logic here
-    console.log(data);
-  };
+  // update the field details after getting the post detailsd
+  useEffect(() => {
+    reset({
+      title: postDetails?.title,
+      description: postDetails?.description,
+    });
+  }, [postDetails, reset]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
