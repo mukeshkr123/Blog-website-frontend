@@ -1,6 +1,8 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useDispatch, useSelector } from "react-redux";
+import { createCommentAction } from "../../redux/slices/comment/commentSlice";
 
 //Form schema
 const formSchema = z.object({
@@ -8,6 +10,8 @@ const formSchema = z.object({
 });
 
 const AddComment = ({ postId }) => {
+  const dispatch = useDispatch();
+
   const {
     control,
     handleSubmit,
@@ -21,6 +25,7 @@ const AddComment = ({ postId }) => {
       postId,
       description: data.description,
     };
+    dispatch(createCommentAction(newData));
     console.log(newData);
   };
 

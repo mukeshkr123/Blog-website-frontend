@@ -1,4 +1,4 @@
-import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const baseUrl = "http://localhost:5000";
@@ -7,6 +7,7 @@ const baseUrl = "http://localhost:5000";
 export const createCommentAction = createAsyncThunk(
   "category/create",
   async (comment, { rejectWithValue, getState }) => {
+    console.log(comment);
     try {
       const userAuth = getState()?.users?.userAuth;
       const config = {
@@ -17,7 +18,7 @@ export const createCommentAction = createAsyncThunk(
 
       const { data } = await axios.post(
         `${baseUrl}/api/comments`,
-        { description: comment?.title, postId: comment?.postId },
+        { postId: comment?.postId, description: comment?.description },
         config
       );
       return data;

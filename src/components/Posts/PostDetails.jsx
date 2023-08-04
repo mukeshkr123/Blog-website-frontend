@@ -7,6 +7,7 @@ import {
   fetchSinglePostsAction,
 } from "../../redux/slices/posts/postSlices";
 import AddComment from "../Comments/Comments";
+import CommentsList from "../Comments/CommentList";
 
 const PostDetails = () => {
   const dispatch = useDispatch();
@@ -94,9 +95,11 @@ const PostDetails = () => {
             </div>
           </div>
           {/* Add comment Form component here */}
+          <AddComment postId={id} />
+
           <div className="flex justify-center items-center">
             {/* <CommentsList comments={post?.comments} postId={post?._id} /> */}
-            <AddComment postId={id} />
+            <CommentsList comments={post?.comments} />
           </div>
         </section>
       )}
