@@ -14,12 +14,17 @@ const PostDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    dispatch(fetchSinglePostsAction(id));
-  }, [dispatch, id]);
-
   const state = useSelector((state) => state.post);
   const { postDetails: post, loading, appErr, serverErr, isDeleted } = state;
+
+  //comment list
+  const comments = useSelector((state) => state.comment);
+
+  const { commentCreated } = comments;
+
+  useEffect(() => {
+    dispatch(fetchSinglePostsAction(id));
+  }, [dispatch, id, commentCreated]);
 
   if (isDeleted) navigate("/posts");
 
