@@ -56,6 +56,33 @@ export const deleteCommentAction = createAsyncThunk(
   }
 );
 
+// update comment
+
+export const updateCommentAction = createAsyncThunk(
+  "category/update",
+  async (comment, { rejectWithValue, getState }) => {
+    try {
+      const userAuth = getState()?.users?.userAuth;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userAuth?.token}`,
+        },
+      };
+      const { data } = await axios.put(
+        `${baseUrl}/api/comments/${comment?.id?.id}`,
+        { description: comment?.description },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //slices
 const commentSlice = createSlice({
   name: "comment",
@@ -90,6 +117,25 @@ const commentSlice = createSlice({
       })
       .addCase(deleteCommentAction.rejected, (state, action) => {
         state.commentDeleted = undefined;
+        state.loading = false;
+        if (action.payload) {
+          state.appErr = action.payload.message;
+        } else {
+          state.serverErr = "Something went wrong. Please try again later.";
+        }
+      });
+
+    // update the comment
+    builder
+      .addCase(updateCommentAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateCommentAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.commentUpdated = action?.payload;
+      })
+      .addCase(updateCommentAction.rejected, (state, action) => {
+        state.commentUpdated = undefined;
         state.loading = false;
         if (action.payload) {
           state.appErr = action.payload.message;

@@ -35,7 +35,10 @@ export default function CommentsList({ comments }) {
                   </p>
                   {/* Check if the same user created this comment */}
                   <p className="flex">
-                    <Link className="p-3">
+                    <Link
+                      to={`/update-comment/${comment?._id}`}
+                      className="p-3"
+                    >
                       <BsPencilSquare className="h-5 mt-3 text-yellow-300" />
                     </Link>
                     <button className="ml-3">
