@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { deleteCommentAction } from "../../redux/slices/comment/commentSlice";
 
 export default function CommentsList({ comments }) {
-  console.log(comments);
+  const dispatch = useDispatch();
   return (
     <div>
       <ul className="divide-y bg-gray-700 w-96 divide-gray-200 p-3 mt-5">
@@ -37,7 +39,12 @@ export default function CommentsList({ comments }) {
                       <BsPencilSquare className="h-5 mt-3 text-yellow-300" />
                     </Link>
                     <button className="ml-3">
-                      <BsTrash className="h-5 mt-3 text-red-600" />
+                      <BsTrash
+                        onClick={() =>
+                          dispatch(deleteCommentAction(comment?._id))
+                        }
+                        className="h-5 mt-3 text-red-600"
+                      />
                     </button>
                   </p>
                 </div>

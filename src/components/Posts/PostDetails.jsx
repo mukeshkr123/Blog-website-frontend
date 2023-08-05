@@ -20,11 +20,11 @@ const PostDetails = () => {
   //comment list
   const comments = useSelector((state) => state.comment);
 
-  const { commentCreated } = comments;
+  const { commentCreated, commentDeleted } = comments;
 
   useEffect(() => {
     dispatch(fetchSinglePostsAction(id));
-  }, [dispatch, id, commentCreated]);
+  }, [dispatch, id, commentCreated, commentDeleted]);
 
   if (isDeleted) navigate("/posts");
 
