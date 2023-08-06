@@ -11,6 +11,7 @@ import PostsList from "./components/Posts/PostList";
 import PostDetails from "./components/Posts/PostDetails";
 import UpdatePost from "./components/Posts/UpdatePost";
 import UpdateComment from "./components/Comments/UpdateComponent";
+import Profile from "./components/User/Profile/Profile";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/posts/:id" element={<PostDetails />} />
         <Route path="/update-post/:id" element={<UpdatePost />} />
         <Route path="/update-comment/:id" element={<UpdateComment />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );
