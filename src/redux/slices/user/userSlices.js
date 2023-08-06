@@ -168,7 +168,7 @@ const usersSlices = createSlice({
       state.loading = false;
     });
     builder.addCase(ProfileUserAction.fulfilled, (state, action) => {
-      state.userProfile = action?.payload;
+      state.profile = action?.payload;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
