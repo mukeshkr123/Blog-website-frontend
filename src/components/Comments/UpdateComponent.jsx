@@ -1,9 +1,13 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useDispatch } from "react-redux";
-import { updateCommentAction } from "../../redux/slices/comment/commentSlice";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchSingleCommentAction,
+  updateCommentAction,
+} from "../../redux/slices/comment/commentSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 //Form schema
 const formSchema = z.object({
@@ -11,9 +15,13 @@ const formSchema = z.object({
 });
 
 const UpdateComment = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const id = useParams();
-  console.log(id);
+
+  useEffect(() => {
+    dispatch(fetchSingleCommentAction(id));
+  }, [dispatch, id]);
   const {
     control,
     handleSubmit,
@@ -21,6 +29,12 @@ const UpdateComment = () => {
   } = useForm({
     resolver: zodResolver(formSchema),
   });
+
+  const comment = useSelector((state) => state.comment);
+  const { commentDetail, isUpdated } = comment;
+
+  // redirect to the
+  if (isUpdated) navigate("/posts");
 
   const onSubmit = (data) => {
     const newData = {
@@ -42,10 +56,10 @@ const UpdateComment = () => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <input
+              <textarea
                 {...field}
                 type="text"
-                className="shadow-sm focus:ring-indigo-500  mr-2 focus:border-indigo-500 block w-full p-2 border-1 sm:text-sm border-gray-300 rounded-md"
+                className="shadow-sm focus:ring-indigo-500  mr-2 focus:border-indigo-500 block w-full p-2 border-2 sm:text-sm border-gray-300 rounded-md"
                 placeholder="Add New comment"
               />
             )}
@@ -67,3 +81,5 @@ const UpdateComment = () => {
 };
 
 export default UpdateComment;
+
+// 24 minute
