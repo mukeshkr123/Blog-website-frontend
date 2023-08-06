@@ -17,7 +17,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const PrivateNavbar = () => {
+const PrivateNavbar = ({ isLogin }) => {
   const dispatch = useDispatch();
 
   const userNavigation = [
@@ -95,7 +95,7 @@ const PrivateNavbar = () => {
                             <span className="sr-only">Open user menu</span>
                             <img
                               className="h-8 w-8 rounded-full"
-                              // src={isLogin?.profilePhoto}
+                              src={isLogin?.profilePhoto}
                               alt=""
                             />
                           </Menu.Button>

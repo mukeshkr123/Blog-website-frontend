@@ -30,9 +30,8 @@ const PostDetails = () => {
 
   //get login user
   const user = useSelector((state) => state.users);
-  const {
-    userAuth: { _id },
-  } = user;
+  const { userAuth } = user;
+  const _id = userAuth?._id;
 
   const isCreatedBy = post?.user?.id === _id;
 
@@ -100,7 +99,7 @@ const PostDetails = () => {
             </div>
           </div>
           {/* Add comment Form component here */}
-          <AddComment postId={id} />
+          {userAuth ? <AddComment postId={id} /> : null}
 
           <div className="flex justify-center items-center">
             {/* <CommentsList comments={post?.comments} postId={post?._id} /> */}

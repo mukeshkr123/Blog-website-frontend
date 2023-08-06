@@ -12,10 +12,10 @@ const Navbar = () => {
   }
 
   if (isAdmin) {
-    return <AdminNavbar />;
+    return <AdminNavbar isLogin={userAuth} />;
   }
 
-  return <PrivateNavbar />;
+  return <PrivateNavbar isLoginUser={userAuth} />;
 };
 
 export default Navbar;
