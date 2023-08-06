@@ -56,6 +56,33 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
+// get profile details
+export const ProfileUserAction = createAsyncThunk(
+  "user/profile",
+  async (userId, { rejectWithValue, getState }) => {
+    const userAuth = getState()?.users?.userAuth;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+
+    //http call
+    try {
+      const { data } = await axios.get(
+        `${baseUrl}/api/users/profile/${userId}`,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //Log out Action
 export const logOutAction = createAsyncThunk(
   "/user/logout",
@@ -131,6 +158,22 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(logOutAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+    });
+
+    //get the profile
+    builder.addCase(ProfileUserAction.pending, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(ProfileUserAction.fulfilled, (state, action) => {
+      state.userProfile = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(ProfileUserAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.payload?.message;

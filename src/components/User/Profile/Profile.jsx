@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import {
   AiOutlineHeart,
@@ -8,13 +8,25 @@ import {
   AiOutlineEye,
 } from "react-icons/ai";
 import { BiSad } from "react-icons/bi";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { ProfileUserAction } from "../../../redux/slices/user/userSlices";
 
 export default function Profile() {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  // fetch the profile details
+  useEffect(() => {
+    dispatch(ProfileUserAction(id));
+  }, [id, dispatch]);
+
+  // get the user details
+
   return (
     <>
       <div className="h-screen flex overflow-hidden bg-white">
         {/* Static sidebar for desktop */}
-
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
           <div className="flex-1 relative z-0 flex overflow-hidden">
             <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last">
