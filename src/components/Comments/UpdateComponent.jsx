@@ -19,6 +19,10 @@ const UpdateComment = () => {
   const dispatch = useDispatch();
   const id = useParams();
 
+  // get the store
+  const comment = useSelector((state) => state.comment);
+  const { commentDetail, isUpdated } = comment;
+
   useEffect(() => {
     dispatch(fetchSingleCommentAction(id));
   }, [dispatch, id]);
@@ -27,11 +31,11 @@ const UpdateComment = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
+    defaultValues: {
+      description: commentDetail?.des,
+    },
     resolver: zodResolver(formSchema),
   });
-
-  const comment = useSelector((state) => state.comment);
-  const { commentDetail, isUpdated } = comment;
 
   // redirect to the
   if (isUpdated) navigate("/posts");
@@ -60,7 +64,6 @@ const UpdateComment = () => {
                 {...field}
                 type="text"
                 className="shadow-sm focus:ring-indigo-500  mr-2 focus:border-indigo-500 block w-full p-2 border-2 sm:text-sm border-gray-300 rounded-md"
-                placeholder="Add New comment"
               />
             )}
           />

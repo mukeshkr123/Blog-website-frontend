@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteCommentAction } from "../../redux/slices/comment/commentSlice";
 
 export default function CommentsList({ comments }) {
+  const user = useSelector((state) => state.users);
+  const { userAuth } = user;
+  const isLoginUser = userAuth?._id;
+  console.log(isLoginUser);
+
   const dispatch = useDispatch();
   return (
     <div>
@@ -34,22 +39,25 @@ export default function CommentsList({ comments }) {
                     {comment?.description}
                   </p>
                   {/* Check if the same user created this comment */}
-                  <p className="flex">
-                    <Link
-                      to={`/update-comment/${comment?._id}`}
-                      className="p-3"
-                    >
-                      <BsPencilSquare className="h-5 mt-3 text-yellow-300" />
-                    </Link>
-                    <button className="ml-3">
-                      <BsTrash
-                        onClick={() =>
-                          dispatch(deleteCommentAction(comment?._id))
-                        }
-                        className="h-5 mt-3 text-red-600"
-                      />
-                    </button>
-                  </p>
+                  {console.log(comment?.user)}
+                  {isLoginUser === comment?.user ? (
+                    <p className="flex">
+                      <Link
+                        to={`/update-comment/${comment?._id}`}
+                        className="p-3"
+                      >
+                        <BsPencilSquare className="h-5 mt-3 text-yellow-300" />
+                      </Link>
+                      <button className="ml-3">
+                        <BsTrash
+                          onClick={() =>
+                            dispatch(deleteCommentAction(comment?._id))
+                          }
+                          className="h-5 mt-3 text-red-600"
+                        />
+                      </button>
+                    </p>
+                  ) : null}
                 </div>
               </div>
             </li>
