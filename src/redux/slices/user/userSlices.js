@@ -99,7 +99,7 @@ export const logOutAction = createAsyncThunk(
   }
 );
 
-//upload profile
+//upload profile ==> solve the error 
 
 export const uploadProfilePhotoAction = createAsyncThunk(
   "user/profile-photo",
@@ -110,11 +110,37 @@ export const uploadProfilePhotoAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    console.log(config);
     try {
       const formData = new FormData();
       formData.append("image", userImage);
       const { data } = await axios.put(`${baseUrl}/api/users/profilephoto-upload`, config, formData);
+      return data;
+    } catch (error) {
+      if (!error.response) throw error;
+      // You can handle specific error statuses here and provide custom messages.
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+//update the profile 
+
+export const updateProfileAction = createAsyncThunk(
+  "user/update",
+  async (user, { rejectWithValue, getState }) => {
+    const userAuth = getState()?.users?.userAuth;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(`${baseUrl}/api/users`, config, {
+        lastName: user?.lastName,
+        firstName: user?.firstName,
+        bio: user?.bio,
+        email: user?.email
+      });
       return data;
     } catch (error) {
       if (!error.response) throw error;
@@ -205,8 +231,7 @@ const usersSlices = createSlice({
       state.serverErr = action?.payload?.message;
     });
 
-    // upload the profile 
-    //get the profile
+    // upload the profile Photo
     builder.addCase(uploadProfilePhotoAction.pending, (state) => {
       state.loading = false;
     });
@@ -217,6 +242,21 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(uploadProfilePhotoAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+    });
+    // upload the profile 
+    builder.addCase(updateProfileAction.pending, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(updateProfileAction.fulfilled, (state, action) => {
+      state.userUpdated = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(updateProfileAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.payload?.message;
