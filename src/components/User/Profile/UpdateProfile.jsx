@@ -3,6 +3,8 @@ import Dropzone from "react-dropzone";
 import { useFormik } from "formik";
 import styled from "styled-components";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { uploadProfilePhotoAction } from "../../../redux/slices/user/userSlices";
 //Css for dropzone
 
 const Container = styled.div`
@@ -25,6 +27,8 @@ const formSchema = Yup.object({
 });
 
 export default function UploadProfilePhoto() {
+
+  const dispatch = useDispatch()
   //formik
 
   const formik = useFormik({
@@ -32,7 +36,7 @@ export default function UploadProfilePhoto() {
       image: "",
     },
     onSubmit: (values) => {
-      console.log(values);
+      dispatch(uploadProfilePhotoAction(values))
     },
     validationSchema: formSchema,
   });

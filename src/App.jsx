@@ -13,6 +13,7 @@ import UpdatePost from "./components/Posts/UpdatePost";
 import UpdateComment from "./components/Comments/UpdateComponent";
 import Profile from "./components/User/Profile/Profile";
 import UploadProfilePhoto from "./components/User/Profile/UpdateProfile";
+import UpdateProfileForm from "./components/User/Profile/UpdateProfileForm";
 
 const App = () => {
   return (
@@ -31,7 +32,8 @@ const App = () => {
         <Route path="/update-post/:id" element={<UpdatePost />} />
         <Route path="/update-comment/:id" element={<UpdateComment />} />
         <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/upload-photo/:id" element={<UploadProfilePhoto />} />
+        <Route path="/upload-profile-photo" element={<UploadProfilePhoto />} />
+        <Route path="/update-profile" element={<UpdateProfileForm />} />
       </Routes>
     </Router>
   );
