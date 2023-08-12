@@ -99,7 +99,7 @@ export const logOutAction = createAsyncThunk(
   }
 );
 
-//upload profile ==> solve the error 
+//upload profile ==> solve the error
 
 export const uploadProfilePhotoAction = createAsyncThunk(
   "user/profile-photo",
@@ -113,17 +113,21 @@ export const uploadProfilePhotoAction = createAsyncThunk(
     try {
       const formData = new FormData();
       formData.append("image", userImage);
-      const { data } = await axios.put(`${baseUrl}/api/users/profilephoto-upload`, config, formData);
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/profilephoto-upload`,
+        config,
+        formData
+      );
       return data;
     } catch (error) {
       if (!error.response) throw error;
-      // You can handle specific error statuses here and provide custom messages.
+
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-//update the profile 
+//update the profile
 
 export const updateProfileAction = createAsyncThunk(
   "user/update",
@@ -139,12 +143,39 @@ export const updateProfileAction = createAsyncThunk(
         lastName: user?.lastName,
         firstName: user?.firstName,
         bio: user?.bio,
-        email: user?.email
+        email: user?.email,
       });
       return data;
     } catch (error) {
       if (!error.response) throw error;
-      // You can handle specific error statuses here and provide custom messages.
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// follow
+
+export const followUserAction = createAsyncThunk(
+  "user/follow",
+  async (userToFollowId, { rejectWithValue, getState }) => {
+    const userAuth = getState()?.users?.userAuth;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/follow`,
+        {
+          followId: userToFollowId,
+        },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) throw error;
+
       return rejectWithValue(error.response.data);
     }
   }
@@ -246,7 +277,7 @@ const usersSlices = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.payload?.message;
     });
-    // upload the profile 
+    // upload the profile
     builder.addCase(updateProfileAction.pending, (state) => {
       state.loading = false;
     });
@@ -257,6 +288,21 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(updateProfileAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+    });
+    // upload the profile
+    builder.addCase(followUserAction.pending, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(followUserAction.fulfilled, (state, action) => {
+      state.followed = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(followUserAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.payload?.message;

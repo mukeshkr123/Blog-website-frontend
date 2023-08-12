@@ -1,9 +1,9 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { z } from "zod";
-import {zodResolver} from "@hookform/resolvers/zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { updateProfileAction } from "../../../redux/slices/user/userSlices";
 
 const schema = z.object({
   firstName: z.string().min(1, "First Name is required"),
@@ -13,17 +13,18 @@ const schema = z.object({
 });
 
 const UpdateProfileForm = () => {
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
   });
 
   const onSubmit = (data) => {
-    console.log(data);
-    // dispatch(registerUserAction(data));
+    dispatch(updateProfileAction(data));
   };
 
   return (
@@ -66,7 +67,7 @@ const UpdateProfileForm = () => {
               <div className="mt-1">
                 {/* Last Name */}
                 <input
-                {...register("lastName")}
+                  {...register("lastName")}
                   id="lastName"
                   name="lastName"
                   type="text"
@@ -76,7 +77,6 @@ const UpdateProfileForm = () => {
               </div>
               {/* Err msg */}
               <div className="text-red-500">{errors?.lastName?.message}</div>
-
             </div>
             <div>
               <label
@@ -88,7 +88,7 @@ const UpdateProfileForm = () => {
               <div className="mt-1">
                 {/* Email */}
                 <input
-               {...register("email")}
+                  {...register("email")}
                   id="email"
                   name="email"
                   type="email"
@@ -97,8 +97,7 @@ const UpdateProfileForm = () => {
                 />
               </div>
               {/* err msg */}
-              <div className="text-red-500">{errors?.email?.message}
-              </div>
+              <div className="text-red-500">{errors?.email?.message}</div>
             </div>
             <div>
               <label
@@ -115,8 +114,7 @@ const UpdateProfileForm = () => {
                 type="text"
               ></textarea>
               {/* Err msg */}
-              <div className="text-red-500">{errors?.bio?.message}
-              </div>
+              <div className="text-red-500">{errors?.bio?.message}</div>
             </div>
             <div>
               <button
