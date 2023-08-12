@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { createCategoryAction } from "../../redux/slices/category/categorySlices";
+import { useNavigate } from "react-router-dom";
 
 const categorySchema = z.object({
   title: z.string().min(5, "At least 5 characters required"),
@@ -12,6 +13,7 @@ const categorySchema = z.object({
 
 const AddNewCategory = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -30,7 +32,12 @@ const AddNewCategory = () => {
   //get the store
   const state = useSelector((state) => state.category);
 
-  const { appErr, serverErr, loading } = state;
+  const { appErr, serverErr, loading, category } = state;
+  console.log(category);
+
+  if (category) {
+    navigate("/category-list");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

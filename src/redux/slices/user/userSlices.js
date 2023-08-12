@@ -283,7 +283,7 @@ const usersSlices = createSlice({
 
     //logout
     builder.addCase(logOutAction.pending, (state) => {
-      state.loading = false;
+      state.loading = true;
     });
     builder.addCase(logOutAction.fulfilled, (state) => {
       state.userAuth = undefined;
@@ -299,7 +299,7 @@ const usersSlices = createSlice({
 
     //get the profile
     builder.addCase(ProfileUserAction.pending, (state) => {
-      state.loading = false;
+      state.loading = true;
     });
     builder.addCase(ProfileUserAction.fulfilled, (state, action) => {
       state.profile = action?.payload;
@@ -315,7 +315,7 @@ const usersSlices = createSlice({
 
     // upload the profile Photo
     builder.addCase(uploadProfilePhotoAction.pending, (state) => {
-      state.loading = false;
+      state.loading = true;
     });
     builder.addCase(uploadProfilePhotoAction.fulfilled, (state, action) => {
       state.profilePhoto = action?.payload;
@@ -330,7 +330,7 @@ const usersSlices = createSlice({
     });
     // upload the profile
     builder.addCase(updateProfileAction.pending, (state) => {
-      state.loading = false;
+      state.loading = true;
     });
     builder.addCase(updateProfileAction.fulfilled, (state, action) => {
       state.userUpdated = action?.payload;
@@ -345,7 +345,7 @@ const usersSlices = createSlice({
     });
     //follow
     builder.addCase(followUserAction.pending, (state) => {
-      state.loading = false;
+      state.loading = true;
     });
     builder.addCase(followUserAction.fulfilled, (state, action) => {
       state.followed = action?.payload;
@@ -361,7 +361,7 @@ const usersSlices = createSlice({
     });
     // unfollow
     builder.addCase(unFollowUserAction.pending, (state) => {
-      state.loading = false;
+      state.loading = true;
     });
     builder.addCase(unFollowUserAction.fulfilled, (state, action) => {
       state.unfollowed = action?.payload;
@@ -377,7 +377,7 @@ const usersSlices = createSlice({
     });
     // update password
     builder.addCase(updatePaswordAction.pending, (state) => {
-      state.loading = false;
+      state.loading = true;
     });
     builder.addCase(updatePaswordAction.fulfilled, (state, action) => {
       state.updatePassword = action?.payload;

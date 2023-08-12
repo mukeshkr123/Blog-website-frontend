@@ -2,8 +2,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updatePaswordAction } from "../../../redux/slices/user/userSlices";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   password: z.string().min(6, { message: "Minimum 6 character requires" }),
@@ -11,6 +12,7 @@ const schema = z.object({
 
 const UpdatePassword = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,19 +22,35 @@ const UpdatePassword = () => {
     resolver: zodResolver(schema),
   });
 
+  const user = useSelector((state) => state?.users);
+  const { updatePassword, loading, appErr, serverErr, userAuth } = user;
+
   const onsubmitPassword = (data) => {
     dispatch(updatePaswordAction(data));
-    console.log(data);
     reset();
   };
+
+  if (updatePassword) {
+    navigate(`/profile/${userAuth?._id}`);
+  }
   return (
     <div className="min-h-screen bg-gray-700  flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-300">
           Change your password
         </h2>
+        <h3
+          className="text-center pt-2 text-red-600
+        "
+        >
+          {serverErr || appErr ? (
+            <p>
+              {serverErr}
+              {appErr}
+            </p>
+          ) : null}
+        </h3>
       </div>
-
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form onSubmit={handleSubmit(onsubmitPassword)} className="space-y-6">
@@ -71,12 +89,21 @@ const UpdatePassword = () => {
             </div>
             <div>
               {/* Submit btn */}
-              <button
-                type="submit"
-                className="inline-flex bg-indigo-700 justify-center w-full px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-200  hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-              >
-                <span>Update Password</span>
-              </button>
+              {loading ? (
+                <button
+                  type="submit"
+                  className="inline-flex bg-indigo-700 justify-center w-full px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-200  hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                >
+                  <span>Updating....</span>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="inline-flex bg-indigo-700 justify-center w-full px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-200  hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                >
+                  <span>Update Password</span>
+                </button>
+              )}
             </div>
           </form>
         </div>
