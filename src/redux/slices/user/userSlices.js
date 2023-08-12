@@ -180,6 +180,57 @@ export const followUserAction = createAsyncThunk(
     }
   }
 );
+// unnfollow
+
+export const unFollowUserAction = createAsyncThunk(
+  "user/unfollow",
+  async (userToFollowId, { rejectWithValue, getState }) => {
+    const userAuth = getState()?.users?.userAuth;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/unfollow`,
+        {
+          unfollowId: userToFollowId,
+        },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) throw error;
+
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+//update password
+export const updatePaswordAction = createAsyncThunk(
+  "user/upddate-password",
+  async (updatePassword, { rejectWithValue, getState }) => {
+    const userAuth = getState()?.users?.userAuth;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/password`,
+        updatePassword,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) throw error;
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 //get user from local storage and place into store
 const userLoginFromStorage = localStorage.getItem("userInfo")
@@ -292,17 +343,49 @@ const usersSlices = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.payload?.message;
     });
-    // upload the profile
+    //follow
     builder.addCase(followUserAction.pending, (state) => {
       state.loading = false;
     });
     builder.addCase(followUserAction.fulfilled, (state, action) => {
       state.followed = action?.payload;
+      state.unfollowed = undefined;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
     builder.addCase(followUserAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+    });
+    // unfollow
+    builder.addCase(unFollowUserAction.pending, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(unFollowUserAction.fulfilled, (state, action) => {
+      state.unfollowed = action?.payload;
+      state.followed = undefined;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(unFollowUserAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+    });
+    // update password
+    builder.addCase(updatePaswordAction.pending, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(updatePaswordAction.fulfilled, (state, action) => {
+      state.updatePassword = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(updatePaswordAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.payload?.message;
