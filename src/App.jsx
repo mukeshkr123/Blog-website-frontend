@@ -15,6 +15,7 @@ import Profile from "./components/User/Profile/Profile";
 import UploadProfilePhoto from "./components/User/Profile/UpdateProfile";
 import UpdateProfileForm from "./components/User/Profile/UpdateProfileForm";
 import UpdatePassword from "./components/User/Forms/UpdatePassword";
+import SendEmail from "./components/Email/SendEmail";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/upload-profile-photo" element={<UploadProfilePhoto />} />
         <Route path="/update-profile" element={<UpdateProfileForm />} />
         <Route path="/update-password" element={<UpdatePassword />} />
+        <Route path="/send-email" element={<SendEmail />} />
       </Routes>
     </Router>
   );
