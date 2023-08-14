@@ -27,6 +27,9 @@ const SendEmail = () => {
     resolver: zodResolver(schema),
   });
 
+  const user = useSelector((state) => state?.users);
+  const { profile } = user;
+
   const onSubmitForm = (data) => {
     const emailData = {
       recipientEmail: profile?.email,
@@ -36,8 +39,7 @@ const SendEmail = () => {
     dispatch(sendMailAction(emailData));
   };
 
-  const user = useSelector((state) => state.users);
-  const { profile } = user;
+  const senMail = useSelector((state) => state?.senMail);
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

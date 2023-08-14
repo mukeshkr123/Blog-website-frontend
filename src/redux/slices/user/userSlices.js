@@ -67,7 +67,6 @@ export const ProfileUserAction = createAsyncThunk(
       },
     };
 
-    console.log(config);
     //http call
     try {
       const { data } = await axios.get(

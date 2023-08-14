@@ -1,11 +1,13 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 const baseUrl = "http://localhost:5000";
+
+const resetEmailAction = createAction("mail/reset");
 
 //send email
 export const sendMailAction = createAsyncThunk(
   "email/send-mail",
-  async (emailData, { rejectWithValue }) => {
+  async (emailData, { rejectWithValue, dispatch }) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -22,6 +24,9 @@ export const sendMailAction = createAsyncThunk(
         },
         config
       );
+
+      // call
+      dispatch(resetEmailAction());
       return data;
     } catch (error) {
       if (!error.response) {
@@ -42,9 +47,14 @@ const sendEmailSlices = createSlice({
         state.appErr = undefined;
         state.serverErr = undefined;
       })
+      //redirect action
+      .addCase(resetEmailAction, (state, action) => {
+        state.isMailSent = true;
+      })
       .addCase(sendMailAction.fulfilled, (state, action) => {
         state.loading = false;
         state.sendMail = action?.payload;
+        state.isMailSent = false;
         state.appErr = undefined;
         state.serverErr = undefined;
       })
