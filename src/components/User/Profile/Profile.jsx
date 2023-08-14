@@ -144,7 +144,7 @@ export default function Profile() {
 
                           <>
                             <Link
-                              to="/update-profile"
+                              to={`/update-profile`}
                               className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                             >
                               <AiOutlineUser
@@ -156,8 +156,8 @@ export default function Profile() {
                           </>
                           {/* Send Mail */}
                           <Link
-                            // to={`/send-mail?email=${profile?.email}`}
-                            className="inline-flex justify-center bg-indigo-900 px-4 py-2 border border-yellow-700 shadow-sm text-sm font-medium rounded-md text-gray-700  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                            to={`/send-email/${profile?._id}`}
+                            className="inline-flex justify-center bg-indigo-900 px-4 py-2 border border-yellow-700 shadow-sm text-sm font-medium rounded-md text-gray-700  hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                           >
                             <AiOutlineMail
                               className="-ml-1 mr-2 h-5 w-5 text-gray-200"

@@ -37,7 +37,7 @@ const App = () => {
         <Route path="/upload-profile-photo" element={<UploadProfilePhoto />} />
         <Route path="/update-profile" element={<UpdateProfileForm />} />
         <Route path="/update-password" element={<UpdatePassword />} />
-        <Route path="/send-email" element={<SendEmail />} />
+        <Route path="/send-email/:id" element={<SendEmail />} />
       </Routes>
     </Router>
   );

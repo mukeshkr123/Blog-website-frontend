@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { ProfileUserAction } from "../../redux/slices/user/userSlices";
+import { sendMailAction } from "../../redux/slices/email/emailSlices";
 
 const schema = z.object({
-  //   email: z.string("Email is required"),
   message: z.string("Message is required").min(10, "Please explain in detail"),
   subject: z.string("Subject is required").min(5, "Subject is required"),
 });
 
 const SendEmail = () => {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  useState(() => {
+    dispatch(ProfileUserAction(id));
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -19,8 +28,16 @@ const SendEmail = () => {
   });
 
   const onSubmitForm = (data) => {
-    console.log(data);
+    const emailData = {
+      recipientEmail: profile?.email,
+      subject: data.subject,
+      message: data.message,
+    };
+    dispatch(sendMailAction(emailData));
   };
+
+  const user = useSelector((state) => state.users);
+  const { profile } = user;
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -52,18 +69,14 @@ const SendEmail = () => {
               {/* Email message */}
               <div className="mt-1">
                 <input
-                  {...register("email")}
                   disabled
                   id="email"
                   name="email"
+                  value={profile?.email}
                   type="email"
                   autoComplete="email"
                   className="appearance-none block w-full px-3 py-2 border bg-gray-200 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
-              </div>
-              {/* Err msg */}
-              <div className="text-red-500">
-                {errors.email && errors?.email.message}
               </div>
             </div>
             <div>

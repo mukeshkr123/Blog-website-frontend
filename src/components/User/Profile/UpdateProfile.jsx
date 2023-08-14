@@ -27,8 +27,7 @@ const formSchema = Yup.object({
 });
 
 export default function UploadProfilePhoto() {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   //formik
 
   const formik = useFormik({
@@ -36,7 +35,7 @@ export default function UploadProfilePhoto() {
       image: "",
     },
     onSubmit: (values) => {
-      dispatch(uploadProfilePhotoAction(values))
+      dispatch(uploadProfilePhotoAction(values));
     },
     validationSchema: formSchema,
   });
