@@ -4,6 +4,7 @@ import categoryReducer from "../slices/category/categorySlices";
 import post from "../slices/posts/postSlices";
 import comment from "../slices/comment/commentSlice";
 import sendMail from "../slices/email/emailSlices";
+import verfication from "../slices/accountVerification/accountVerificationSlices";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     post,
     comment,
     sendMail,
+    verfication,
   },
 });
 

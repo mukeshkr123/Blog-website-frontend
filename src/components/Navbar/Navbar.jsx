@@ -3,7 +3,7 @@ import PrivateNavbar from "./Private/PrivateNavbar";
 import AdminNavbar from "./Admin/AdminNavbar";
 import { useSelector } from "react-redux";
 const Navbar = () => {
-  const { userAuth } = useSelector((state) => state.users);
+  const { userAuth, profile } = useSelector((state) => state.users);
   const isAdmin = userAuth?.isAdmin;
 
   if (!userAuth) {
