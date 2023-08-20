@@ -1,12 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { BsFillCircleFill } from "react-icons/bs";
+import { AiFillCheckCircle } from "react-icons/ai";
 
 export default function AccountVerificationSuccessAlert() {
   return (
     <div className="rounded-md bg-green-50 p-4">
       <div className="flex">
         <div className="flex-shrink-0">
-          <BsFillCircleFill
+          <AiFillCheckCircle
             className="h-5 w-5 text-green-400"
             aria-hidden="true"
           />

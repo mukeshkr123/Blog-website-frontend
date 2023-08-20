@@ -1,5 +1,5 @@
 import { BsExclamation } from "react-icons/bs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sendVerificationToken } from "../../redux/slices/accountVerification/accountVerificationSlices";
 
 export default function AccountVerificationAlertWarning() {

@@ -9,9 +9,11 @@ import {
   FaSignOutAlt,
   FaPlus,
 } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOutAction } from "../../../redux/slices/user/userSlices";
 import AccountVerificationSuccessAlert from "../../Navigation/AccountVerificationAlert";
+import AccountVerificationAlertWarning from "../../Navigation/AccountVerificationAlert";
+import AccountVerificationSuccessAlertWarning from "../../Navigation/AccountVerifictionSuccessAlert";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -35,9 +37,20 @@ const AdminNavbar = ({ isLogin }) => {
     { name: "Setting", href: "/update-password" },
   ];
 
+  // select the token succes for verification
+  const token = useSelector((state) => state?.verfication);
+  const { tokenSent, loading, appErr, serverErr } = token;
+
   return (
     <>
-      <AccountVerificationSuccessAlert />
+      {!tokenSent && <AccountVerificationAlertWarning />}
+      {loading && <h2 className="text-center">Loading Please wait ....</h2>}
+      {tokenSent && <AccountVerificationSuccessAlertWarning />}
+      {appErr || serverErr ? (
+        <h2 className="text-center text-red-500">
+          {serverErr} {appErr}
+        </h2>
+      ) : null}
       <Disclosure as="nav" className="bg-green-800">
         {({ open }) => (
           <>
