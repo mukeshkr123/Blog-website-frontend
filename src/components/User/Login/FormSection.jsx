@@ -37,7 +37,7 @@ const FormSection = () => {
 
   //redirect to login when registered successfully
   if (userAuth) {
-    return <Navigate to="/profile" />;
+    return <Navigate to={`/profile/${userAuth?._id}`} />;
   }
   return (
     <form
