@@ -17,6 +17,7 @@ import UpdateProfileForm from "./components/User/Profile/UpdateProfileForm";
 import UpdatePassword from "./components/User/Forms/UpdatePassword";
 import SendEmail from "./components/Email/SendEmail";
 import AccountVerified from "./components/User/AccountVerification/AccountVerified";
+import UsersList from "./components/User/UserList/UserList";
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/send-email/:id" element={<SendEmail />} />
         <Route path="/verify-account/:token" element={<AccountVerified />} />
+        <Route path="/users" element={<UsersList />} />
       </Routes>
     </Router>
   );
