@@ -231,6 +231,26 @@ export const updatePaswordAction = createAsyncThunk(
   }
 );
 
+//users
+export const fetchUsersAction = createAsyncThunk(
+  "user/list",
+  async (id, { rejectWithValue, getState }) => {
+    const userAuth = getState()?.users?.userAuth;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.get(`${baseUrl}/api/users`, config);
+      return data;
+    } catch (error) {
+      if (!error.response) throw error;
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 //get user from local storage and place into store
 const userLoginFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -385,6 +405,21 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(updatePaswordAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.payload?.message;
+    });
+    // fetch users
+    builder.addCase(fetchUsersAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchUsersAction.fulfilled, (state, action) => {
+      state.usersList = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(fetchUsersAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.payload?.message;
