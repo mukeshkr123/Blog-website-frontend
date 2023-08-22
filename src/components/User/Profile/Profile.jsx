@@ -71,7 +71,7 @@ export default function Profile() {
                           <h1 className="text-2xl font-bold text-gray-900 ">
                             {profile?.firstName} {profile?.lastName}
                             <span className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                              {/* {profile?.accountType} */}
+                              {profile?.accountType}
                             </span>
                             {/* Display if verified or not */}
                             {profile?.isAccountVerified ? (
@@ -222,7 +222,7 @@ export default function Profile() {
                                   {user?.firstName} {user?.lastName}
                                 </h3>
                                 <p className="text-indigo-600">
-                                  {/* {user.accountType} */}AccountType
+                                  {user?.accountType}
                                 </p>
                               </div>
                             </div>
