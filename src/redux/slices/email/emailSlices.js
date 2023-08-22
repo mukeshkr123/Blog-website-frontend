@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const baseUrl = "http://localhost:5000";
+import baseUrl from "../../../../utils/baseUrl";
 
 const resetEmailAction = createAction("mail/reset");
 
