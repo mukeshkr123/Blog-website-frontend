@@ -15,7 +15,7 @@ const UsersListItem = ({ user }) => {
   };
   return (
     <>
-      <div className="p-8 mb-4 bg-white shadow rounded">
+      <div className="p-5 mb-4 bg-white shadow rounded">
         <div className="flex flex-wrap items-center -mx-4">
           <div className="w-full lg:w-3/12 flex px-4 mb-6 lg:mb-0">
             <img
