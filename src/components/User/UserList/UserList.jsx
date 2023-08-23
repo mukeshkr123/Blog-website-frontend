@@ -7,21 +7,23 @@ import { fetchUsersAction } from "../../../redux/slices/user/userSlices";
 const UsersList = () => {
   const dispatch = useDispatch();
 
+  // select the users
+  const users = useSelector((state) => state?.users);
+  const { usersList, userBlocked, userUnBlocked, appErr, serverErr, loading } =
+    users;
+
   //fetch all users
   useEffect(() => {
     dispatch(fetchUsersAction());
-  }, []);
+  }, [userBlocked, userUnBlocked]);
 
-  // select the users
-  const users = useSelector((state) => state?.users);
-  const { usersList, appErr, serverErr, loading } = users;
   return (
     <>
       <section class="py-8 bg-gray-900 min-h-screen">
         {loading ? (
           <h1 className="text-center text-yellow-50">Loading ...</h1>
         ) : appErr || serverErr ? (
-          <h3>
+          <h3 className="text-yellow-600 text-center text-lg">
             {serverErr}
             {appErr}
           </h3>
