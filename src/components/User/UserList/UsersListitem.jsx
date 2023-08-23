@@ -1,9 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillMail } from "react-icons/ai";
 
 const UsersListItem = ({ user }) => {
-  console.log(user);
+  const navigate = useNavigate();
+  const sendMailNavigator = (userId) => {
+    navigate(`/send-email/${userId}`);
+  };
   return (
     <>
       <div className="p-8 mb-4 bg-white shadow rounded">
@@ -49,7 +52,7 @@ const UsersListItem = ({ user }) => {
               Profile
             </Link>
 
-            {user?.user?.isBlocked ? (
+            {user?.isBlocked ? (
               <button
                 // onClick={() => dispatch(unBlockUserAction(user?.user?._id))}
                 className="inline-block py-1 px-2 text-center bg-gray-500 text-gray-300 mr-2 mb-1 lg:mb-0 text-xs border rounded"
@@ -65,8 +68,8 @@ const UsersListItem = ({ user }) => {
               </button>
             )}
 
-            <Link
-              to={`/send-mail?email=${user?.user?.email}`}
+            <button
+              onClick={() => sendMailNavigator(user?._id)}
               className="inline-flex  justify-center bg-green-700 px-2   border border-yellow-700 shadow-sm text-sm font-medium rounded-md text-gray-700  hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
             >
               <AiFillMail
@@ -76,7 +79,7 @@ const UsersListItem = ({ user }) => {
               <span className="text-base mr-2  text-bold text-yellow-500">
                 Message
               </span>
-            </Link>
+            </button>
           </div>
           <div className="w-full lg:w-1/12 px-4">
             <div className="flex items-center">
