@@ -2,7 +2,6 @@ import { Disclosure } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import { MdMenu, MdClose, MdPerson, MdLibraryBooks } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
-import AccountVerificationAlertWarning from "../../Navigation/AccountVerificationAlert";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -19,7 +18,6 @@ function classNames(...classes) {
 const PublicNavbar = () => {
   return (
     <>
-      <AccountVerificationAlertWarning />
       <Disclosure as="nav" className="bg-gray-800">
         {({ open }) => (
           <>

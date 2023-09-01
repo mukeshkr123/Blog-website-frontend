@@ -10,7 +10,7 @@ const loginSchema = z.object({
     .string()
     .email("Please Enter a valid email")
     .min(5, "Email is required"),
-  password: z.string().min(7, "Password is required"),
+  password: z.string().min(2, "Password is required"),
 });
 
 const FormSection = () => {

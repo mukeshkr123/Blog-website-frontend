@@ -33,7 +33,6 @@ const AddNewCategory = () => {
   const state = useSelector((state) => state.category);
 
   const { appErr, serverErr, loading, category } = state;
-  console.log(category);
 
   if (category) {
     navigate("/category-list");

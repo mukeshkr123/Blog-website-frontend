@@ -11,9 +11,6 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logOutAction } from "../../../redux/slices/user/userSlices";
-import AccountVerificationSuccessAlert from "../../Navigation/AccountVerificationAlert";
-import AccountVerificationAlertWarning from "../../Navigation/AccountVerificationAlert";
-import AccountVerificationSuccessAlertWarning from "../../Navigation/AccountVerifictionSuccessAlert";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -37,20 +34,8 @@ const AdminNavbar = ({ isLogin }) => {
     { name: "Setting", href: "/update-password" },
   ];
 
-  // select the token succes for verification
-  const token = useSelector((state) => state?.verfication);
-  const { tokenSent, loading, appErr, serverErr } = token;
-
   return (
     <>
-      {!tokenSent && <AccountVerificationAlertWarning />}
-      {loading && <h2 className="text-center">Loading Please wait ....</h2>}
-      {tokenSent && <AccountVerificationSuccessAlertWarning />}
-      {appErr || serverErr ? (
-        <h2 className="text-center text-red-500">
-          {serverErr} {appErr}
-        </h2>
-      ) : null}
       <Disclosure as="nav" className="bg-green-800">
         {({ open }) => (
           <>
@@ -109,9 +94,9 @@ const AdminNavbar = ({ isLogin }) => {
                         className="-ml-1 mr-2 h-5 w-5"
                         aria-hidden="true"
                       />
-                      {/* <span onClick={() => dispatch(logOutAction())}>
+                      <span onClick={() => dispatch(logOutAction())}>
                         Logout
-                      </span> */}
+                      </span>
                     </button>
                   </div>
                   <div className="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">

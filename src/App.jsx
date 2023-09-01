@@ -2,7 +2,6 @@ import HomePage from "./components/HomePage/HomePage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from "./components/User/Register/Register";
 import Login from "./components/User/Login/Login";
-import Navbar from "./components/Navbar/Navbar";
 import AddNewCategory from "./components/Categories/AddNewCategory";
 import CatgoriesLists from "./components/Categories/CatgoriesLists";
 import UpdateCategory from "./components/Categories/UpdateCategories ";
@@ -22,15 +21,24 @@ import PrivateNavbar from "./components/Navbar/Private/PrivateNavbar";
 import PublicNavbar from "./components/Navbar/Public/PublicNavbar";
 import { useSelector } from "react-redux";
 import ProctedRoute from "./components/AuthRoute/ProtectedRoute";
+import AdminNavbar from "./components/Navbar/Admin/AdminNavbar";
 
 const App = () => {
   //! Get the login user from store
   const { userAuth } = useSelector((state) => state?.users);
   const isLogin = userAuth?.token;
+  const isAdmin = userAuth?.isAdmin;
+
   return (
     <Router>
       {/* Navabar  */}
-      {isLogin ? <PrivateNavbar /> : <PublicNavbar />}
+      {isAdmin ? (
+        <AdminNavbar />
+      ) : isLogin ? (
+        <PrivateNavbar />
+      ) : (
+        <PublicNavbar />
+      )}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<Register />} />
