@@ -8,7 +8,6 @@ export default function CommentsList({ comments }) {
   const user = useSelector((state) => state.users);
   const { userAuth } = user;
   const isLoginUser = userAuth?._id;
-  console.log(isLoginUser);
 
   const dispatch = useDispatch();
   return (
@@ -38,11 +37,9 @@ export default function CommentsList({ comments }) {
                     </p>
                   </div>
                   <p className="text-sm text-gray-400">
-                    {console.log(comment)}
                     {comment?.description}
                   </p>
                   {/* Check if the same user created this comment */}
-                  {console.log(comment?.user)}
                   {isLoginUser === comment?.user ? (
                     <p className="flex">
                       <Link

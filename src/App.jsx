@@ -18,30 +18,154 @@ import UpdatePassword from "./components/User/Forms/UpdatePassword";
 import SendEmail from "./components/Email/SendEmail";
 import AccountVerified from "./components/User/AccountVerification/AccountVerified";
 import UsersList from "./components/User/UserList/UserList";
+import PrivateNavbar from "./components/Navbar/Private/PrivateNavbar";
+import PublicNavbar from "./components/Navbar/Public/PublicNavbar";
+import { useSelector } from "react-redux";
+import ProctedRoute from "./components/AuthRoute/ProtectedRoute";
 
 const App = () => {
+  //! Get the login user from store
+  const { userAuth } = useSelector((state) => state?.users);
+  const isLogin = userAuth?.token;
   return (
     <Router>
-      <Navbar />
+      {/* Navabar  */}
+      {isLogin ? <PrivateNavbar /> : <PublicNavbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/add-category" element={<AddNewCategory />} />
-        <Route path="/update-category/:id" element={<UpdateCategory />} />
-        <Route path="/create-post" element={<CreatePost />} />
-        <Route path="/category-list" element={<CatgoriesLists />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/posts" element={<PostsList />} />
-        <Route path="/posts/:id" element={<PostDetails />} />
-        <Route path="/update-post/:id" element={<UpdatePost />} />
-        <Route path="/update-comment/:id" element={<UpdateComment />} />
-        <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/upload-profile-photo" element={<UploadProfilePhoto />} />
-        <Route path="/update-profile" element={<UpdateProfileForm />} />
-        <Route path="/update-password" element={<UpdatePassword />} />
-        <Route path="/send-email/:id" element={<SendEmail />} />
-        <Route path="/verify-account/:token" element={<AccountVerified />} />
-        <Route path="/users" element={<UsersList />} />
+        {/* Profile  */}
+        <Route
+          path="/profile/:id"
+          element={
+            <ProctedRoute>
+              <Profile />
+            </ProctedRoute>
+          }
+        />
+
+        {/* Create post  */}
+        <Route
+          path="/create-post"
+          element={
+            <ProctedRoute>
+              <CreatePost />
+            </ProctedRoute>
+          }
+        />
+
+        {/* Post details  */}
+        <Route
+          path="/posts/:id"
+          element={
+            <ProctedRoute>
+              <PostDetails />
+            </ProctedRoute>
+          }
+        />
+
+        {/* Update Profile  */}
+        <Route
+          path="/update-profile"
+          element={
+            <ProctedRoute>
+              <UpdateProfileForm />
+            </ProctedRoute>
+          }
+        />
+
+        {/* Forgot password  */}
+
+        <Route
+          path="/add-category"
+          element={
+            <ProctedRoute>
+              <AddNewCategory />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/update-category/:id"
+          element={
+            <ProctedRoute>
+              <UpdateCategory />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/category-list"
+          element={
+            <ProctedRoute>
+              <CatgoriesLists />
+            </ProctedRoute>
+          }
+        />
+
+        <Route
+          path="/posts"
+          element={
+            <ProctedRoute>
+              <PostsList />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/update-post/:id"
+          element={
+            <ProctedRoute>
+              <UpdatePost />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/update-comment/:id"
+          element={
+            <ProctedRoute>
+              <UpdateComment />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/upload-profile-photo"
+          element={
+            <ProctedRoute>
+              <UploadProfilePhoto />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/update-password"
+          element={
+            <ProctedRoute>
+              <UpdatePassword />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/send-email/:id"
+          element={
+            <ProctedRoute>
+              <SendEmail />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/verify-account/:token"
+          element={
+            <ProctedRoute>
+              <AccountVerified />
+            </ProctedRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProctedRoute>
+              <UsersList />
+            </ProctedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

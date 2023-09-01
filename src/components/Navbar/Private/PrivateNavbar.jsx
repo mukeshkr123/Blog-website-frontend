@@ -88,7 +88,7 @@ const PrivateNavbar = ({ isLogin }) => {
                         className="-ml-1 mr-2 h-5 w-5"
                         aria-hidden="true"
                       />
-                      <span onClick={dispatch(logOutAction())}>Logout</span>
+                      {/* <span onClick={dispatch(logOutAction())}>Logout</span> */}
                     </button>
                   </div>
                   <div className="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">

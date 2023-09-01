@@ -32,7 +32,6 @@ export default function Profile() {
     userAuth,
   } = user;
 
-  console.log(profile?.viewedBy);
   // fetch the profile details
   useEffect(() => {
     dispatch(ProfileUserAction(id));
