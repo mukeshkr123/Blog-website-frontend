@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillMail } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   blockBlockUserAction,
   unblockBlockUserAction,
@@ -13,6 +13,10 @@ const UsersListItem = ({ user }) => {
   const sendMailNavigator = (userId) => {
     navigate(`/send-email/${userId}`);
   };
+
+  // check if admin
+  const { userAuth } = useSelector((state) => state?.users);
+  const isAdmin = userAuth?.isAdmin;
   return (
     <>
       <div className="p-5 mb-4 bg-white shadow rounded">
@@ -58,23 +62,23 @@ const UsersListItem = ({ user }) => {
               Profile
             </Link>
 
-            {user?.isBlocked ? (
-              <button
-                // onClick={() => dispatch(unBlockUserAction(user?.user?._id))}
-                onClick={() => dispatch(unblockBlockUserAction(user?._id))}
-                className="inline-block py-1 px-2 text-center bg-gray-500 text-gray-300 mr-2 mb-1 lg:mb-0 text-xs border rounded"
-              >
-                unblock
-              </button>
-            ) : (
-              <button
-                // onClick={() => dispatch(blockUserAction(user?.user?._id))}
-                onClick={() => dispatch(blockBlockUserAction(user?._id))}
-                className="inline-block py-1 px-2 text-center bg-red-600 text-gray-300 mr-2 mb-1 lg:mb-0 text-xs border rounded"
-              >
-                Block
-              </button>
-            )}
+            {isAdmin ? (
+              user?.isBlocked ? (
+                <button
+                  onClick={() => dispatch(unblockBlockUserAction(user?._id))}
+                  className="inline-block py-1 px-2 text-center bg-gray-500 text-gray-300 mr-2 mb-1 lg:mb-0 text-xs border rounded"
+                >
+                  unblock
+                </button>
+              ) : (
+                <button
+                  onClick={() => dispatch(blockBlockUserAction(user?._id))}
+                  className="inline-block py-1 px-2 text-center bg-red-600 text-gray-300 mr-2 mb-1 lg:mb-0 text-xs border rounded"
+                >
+                  Block
+                </button>
+              )
+            ) : null}
 
             <button
               onClick={() => sendMailNavigator(user?._id)}

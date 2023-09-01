@@ -17,6 +17,8 @@ const UsersList = () => {
     dispatch(fetchUsersAction());
   }, [userBlocked, userUnBlocked]);
 
+  //check is admin
+
   return (
     <>
       <section class="py-8 px-8 bg-gray-900 min-h-screen">
